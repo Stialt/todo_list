@@ -7,6 +7,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +29,9 @@ public class AddEditTaskActivity extends AppCompatActivity {
 
     private EditText editTextTitle;
     private EditText editTextDescription;
-    private NumberPicker numberPickerPriority;
+    private SeekBar seekBar;
+    private TextView textViewSeekbar;
+    //private NumberPicker numberPickerPriority;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +40,41 @@ public class AddEditTaskActivity extends AppCompatActivity {
 
         editTextTitle = findViewById(R.id.edit_text_title);
         editTextDescription = findViewById(R.id.edit_text_description);
-        numberPickerPriority = findViewById(R.id.number_picker_priority);
+        //numberPickerPriority = findViewById(R.id.number_picker_priority);
 
-        numberPickerPriority.setMinValue(1);
-        numberPickerPriority.setMaxValue(10);
+        //numberPickerPriority.setMinValue(1);
+        //numberPickerPriority.setMaxValue(10);
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        seekBar = findViewById(R.id.seekBar);
+        textViewSeekbar = findViewById(R.id.textViewSeekbar);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textViewSeekbar.setText( String.valueOf(progress/11 + 1));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_ID)) {
             setTitle("Edit Task");
             editTextTitle.setText(intent.getStringExtra(EXTRA_TITLE));
             editTextDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION));
-            numberPickerPriority.setValue(intent.getIntExtra(EXTRA_PRIORITY, 1));
+            //numberPickerPriority.setValue(intent.getIntExtra(EXTRA_PRIORITY, 1));
+            int priority = intent.getIntExtra(EXTRA_PRIORITY, 1);
+            seekBar.setProgress(11 * priority - 11);
+            textViewSeekbar.setText(String.valueOf(priority));
         } else {
             setTitle("Add Task");
         }
@@ -57,7 +83,8 @@ public class AddEditTaskActivity extends AppCompatActivity {
     private void saveTask() {
         String title = editTextTitle.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
-        int priority = numberPickerPriority.getValue();
+        //int priority = numberPickerPriority.getValue();
+        int priority = seekBar.getProgress()/11 + 1;
 
         //if (title.trim().isEmpty() || description.trim().isEmpty()) {
         if (title.trim().isEmpty()) {
