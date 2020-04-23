@@ -16,14 +16,12 @@ public abstract class TaskDatabase extends RoomDatabase {
     //Room will generate code for this
     public abstract TaskDao taskDao();
 
-    //"synchronized" prevents several threads to access this function at the same time
-    //which prevents creation of several instances at once
+    //"synchronized" to prevent creation of several instances at the same time
     public static synchronized TaskDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                     TaskDatabase.class, "task_database")
                     .fallbackToDestructiveMigration()
-                    //.addCallback(roomCallback)
                     .build();
         }
         return instance;

@@ -40,27 +40,20 @@ public class AddEditTaskActivity extends AppCompatActivity {
 
         editTextTitle = findViewById(R.id.edit_text_title);
         editTextDescription = findViewById(R.id.edit_text_description);
-        //numberPickerPriority = findViewById(R.id.number_picker_priority);
-
-        //numberPickerPriority.setMinValue(1);
-        //numberPickerPriority.setMaxValue(10);
 
         seekBar = findViewById(R.id.seekBar);
         textViewSeekbar = findViewById(R.id.textViewSeekbar);
 
+        //Update priority value on GUI
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 textViewSeekbar.setText( String.valueOf(progress/11 + 1));
             }
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
         if (getSupportActionBar() != null)
@@ -71,7 +64,7 @@ public class AddEditTaskActivity extends AppCompatActivity {
             setTitle("Edit Task");
             editTextTitle.setText(intent.getStringExtra(EXTRA_TITLE));
             editTextDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION));
-            //numberPickerPriority.setValue(intent.getIntExtra(EXTRA_PRIORITY, 1));
+
             int priority = intent.getIntExtra(EXTRA_PRIORITY, 1);
             seekBar.setProgress(11 * priority - 11);
             textViewSeekbar.setText(String.valueOf(priority));
@@ -80,10 +73,10 @@ public class AddEditTaskActivity extends AppCompatActivity {
         }
     }
 
+    //Saving task by returning data to mainActivity
     private void saveTask() {
         String title = editTextTitle.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
-        //int priority = numberPickerPriority.getValue();
         int priority = seekBar.getProgress()/11 + 1;
 
         //if (title.trim().isEmpty() || description.trim().isEmpty()) {
@@ -106,6 +99,8 @@ public class AddEditTaskActivity extends AppCompatActivity {
         finish();
     }
 
+
+    //Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -122,7 +117,6 @@ public class AddEditTaskActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-        //return super.onOptionsItemSelected(item);
     }
 
 }

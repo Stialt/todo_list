@@ -21,11 +21,12 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskHolder> {
         super(DIFF_CALLBACK);
     }
 
-    //DIFF_CALLBACK is responsible for better item list comparison
-    //It allows UI to use apply properly and notify adapter more efficiently
+    //DiffUtil is responsible for list items comparison
+    //Allows recycler UI to apply animations properly and notify changes more efficiently
     private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK = new DiffUtil.ItemCallback<Task>() {
         @Override
         public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+            //Compare by id (primaryKey)
             return oldItem.getId() == newItem.getId();
         }
 
@@ -69,18 +70,15 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskHolder> {
             textViewPriority = itemView.findViewById(R.id.text_view_priority);
 
             //onClickListener that executes function implemented in MainActivity
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (listener != null && position != RecyclerView.NO_POSITION)
-                        listener.onItemClick(getItem(position));
-                }
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (listener != null && position != RecyclerView.NO_POSITION)
+                    listener.onItemClick(getItem(position));
             });
         }
     }
 
-    //this interface should be implemented in MainActivity
+    //This interface must be implemented to execute function inside holder OnClickListener
     public interface OnItemClickListener {
         void onItemClick(Task task);
     }

@@ -25,6 +25,7 @@ public class TaskViewModel extends AndroidViewModel {
         compositeDisposable.dispose();
     }
 
+    //View Model standart constructor with only Application parameter
     public TaskViewModel(Application application) {
         super(application);
         repository = new TaskRepository(application,compositeDisposable);

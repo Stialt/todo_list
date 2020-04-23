@@ -42,12 +42,9 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton buttonAddNote = findViewById(R.id.button_add_task);
 
         //Start activity for adding new note
-        buttonAddNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
-                startActivityForResult(intent, ADD_TASK_REQUEST);
-            }
+        buttonAddNote.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
+            startActivityForResult(intent, ADD_TASK_REQUEST);
         });
 
         //Set up RecyclerView
@@ -62,19 +59,14 @@ public class MainActivity extends AppCompatActivity {
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
 
         //Observe changes on data from ViewModel
-        taskViewModel.getAllTasks().observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                adapter.submitList(tasks);
-            }
-        });
+        taskViewModel.getAllTasks().observe(this, tasks -> adapter.submitList(tasks));
 
         //Set item deletion on swipe (to the right or left)
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                //Leave this empty because no Drag-and-Drop functionality implemented
+                //Leave this empty since no Drag-and-Drop functionality implemented
                 return false;
             }
 
@@ -86,17 +78,14 @@ public class MainActivity extends AppCompatActivity {
         }).attachToRecyclerView(recyclerView);
 
         //Set OnItemClickListener for items in RecyclerView
-        adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Task task) {
-                Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
-                intent.putExtra(AddEditTaskActivity.EXTRA_ID, task.getId());
-                intent.putExtra(AddEditTaskActivity.EXTRA_TITLE, task.getTitle());
-                intent.putExtra(AddEditTaskActivity.EXTRA_DESCRIPTION, task.getDescription());
-                intent.putExtra(AddEditTaskActivity.EXTRA_PRIORITY, task.getPriority());
+        adapter.setOnItemClickListener(task -> {
+            Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
+            intent.putExtra(AddEditTaskActivity.EXTRA_ID, task.getId());
+            intent.putExtra(AddEditTaskActivity.EXTRA_TITLE, task.getTitle());
+            intent.putExtra(AddEditTaskActivity.EXTRA_DESCRIPTION, task.getDescription());
+            intent.putExtra(AddEditTaskActivity.EXTRA_PRIORITY, task.getPriority());
 
-                startActivityForResult(intent, EDIT_TASK_REQUEST);
-            }
+            startActivityForResult(intent, EDIT_TASK_REQUEST);
         });
     }
 
